@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -20,10 +21,31 @@ public class TodoListFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        binding = FragmentTodoListBinding.inflate(inflater, container, false);
-        ViewGroup rootView = binding.getRoot();
+        //inflate layout
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_todo_list,container, false);
+        View rootView = binding.getRoot();
+
+        //set viewmodel
         TodoListViewModel viewModel = new ViewModelProvider(this).get(TodoListViewModel.class);
-        binding.todoList.setAdapter(new TodoAdapter(viewModel.data));
+
+        //set databinding variable
+        binding.setViewModel(viewModel);
+        binding.setLifecycleOwner(this);
+
+        //set adapter for recyclerview
+        TodoAdapter adapter = new TodoAdapter(viewModel.data.getValue());
+        binding.todoList.setAdapter(adapter);
+
+        viewModel.data.observe(getViewLifecycleOwner(), todos -> {
+            //notifyDataSetChanged for adapter
+            adapter.notifyDataSetChanged();
+        });
+
+        binding.saveButton.setOnClickListener(view -> {
+            viewModel.addTodo();
+            binding.taskName.getText().clear();
+
+        });
 
         return rootView;
     }
@@ -34,3 +56,5 @@ public class TodoListFragment extends Fragment {
         binding = null;
     }
 }
+
+

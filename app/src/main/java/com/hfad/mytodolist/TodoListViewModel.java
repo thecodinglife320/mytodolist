@@ -1,5 +1,8 @@
 package com.hfad.mytodolist;
 
+import android.util.Log;
+
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import java.util.ArrayList;
@@ -7,15 +10,18 @@ import java.util.List;
 
 public class TodoListViewModel extends ViewModel {
 
-    List<Todo> data = new ArrayList<>();
+    MutableLiveData<List<Todo>> data = new MutableLiveData<>(new ArrayList<>()) ;
+    public MutableLiveData<String> todoName= new MutableLiveData<>("");
 
     public TodoListViewModel(){
-        data.add(new Todo("do home work"));
-        data.add(new Todo("write love letter"));
-        data.add(new Todo("water plant"));
+        data.getValue().add(new Todo("do home work"));
+        data.getValue().add(new Todo("write love letter"));
+        data.getValue().add(new Todo("water plant"));
     }
 
-    void setData() {
-
+    void addTodo(){
+        Log.d("viewmodel",todoName.getValue());
+        data.getValue().add(new Todo(todoName.getValue()));
     }
+
 }
