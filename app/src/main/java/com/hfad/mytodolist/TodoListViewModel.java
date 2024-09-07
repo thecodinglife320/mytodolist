@@ -21,7 +21,9 @@ public class TodoListViewModel extends ViewModel {
 
     void addTodo(){
         Log.d("viewmodel",todoName.getValue());
-        data.getValue().add(new Todo(todoName.getValue()));
+        List<Todo> current = new ArrayList<>(data.getValue());
+        current.add(new Todo(todoName.getValue()));
+        data.setValue(current);
     }
 
 }

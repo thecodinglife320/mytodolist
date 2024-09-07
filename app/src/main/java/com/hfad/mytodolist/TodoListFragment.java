@@ -1,6 +1,7 @@
 package com.hfad.mytodolist;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,19 +28,19 @@ public class TodoListFragment extends Fragment {
 
         //set viewmodel
         TodoListViewModel viewModel = new ViewModelProvider(this).get(TodoListViewModel.class);
-
-        //set databinding variable
-        binding.setViewModel(viewModel);
-        binding.setLifecycleOwner(this);
-
+        
         //set adapter for recyclerview
-        TodoAdapter adapter = new TodoAdapter(viewModel.data.getValue());
+        TodoAdapter adapter = new TodoAdapter(new TodoDiffCallback());
         binding.todoList.setAdapter(adapter);
 
         viewModel.data.observe(getViewLifecycleOwner(), todos -> {
-            //notifyDataSetChanged for adapter
-            adapter.notifyDataSetChanged();
+            Log.d("observer", "ff10");
+            adapter.submitList(todos);
         });
+
+        //set databinding variable
+        binding.setViewModel(viewModel);
+        binding.setLifecycleOwner(getViewLifecycleOwner());
 
         binding.saveButton.setOnClickListener(view -> {
             viewModel.addTodo();

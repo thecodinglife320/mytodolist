@@ -7,15 +7,15 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
-public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.TodoItemHolder> {
+public class TodoAdapter extends ListAdapter<Todo, TodoAdapter.TodoItemHolder> {
 
-    public List<Todo> data;
-
-    public TodoAdapter(List<Todo> data){
-        this.data = data;
+    protected TodoAdapter(@NonNull DiffUtil.ItemCallback<Todo> diffCallback) {
+        super(diffCallback);
     }
 
     @NonNull
@@ -29,12 +29,7 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.TodoItemHolder
     //bind data vao viewHolder
     @Override
     public void onBindViewHolder(@NonNull TodoItemHolder holder, int position) {
-        holder.bindData(data.get(position));
-    }
-
-    @Override
-    public int getItemCount() {
-        return data.size();
+        holder.bindData(getItem(position));
     }
 
     //view holder class
